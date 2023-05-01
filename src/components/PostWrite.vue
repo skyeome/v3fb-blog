@@ -41,23 +41,21 @@
 import { firebaseUser, isSigned } from 'src/composables/useAuth'
 import { ref } from 'vue'
 import { db } from 'boot/firebase'
-import { collection, addDoc } from 'firebase/firestore'
-
+import { doc, setDoc } from 'firebase/firestore'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const title = ref('')
 const context = ref('')
 
 const existsRule = (val:string) => (val && val.length > 0) || '내용을 적어주세요'
 
 const onSubmit = async () => {
-  try {
-    const docRef = await addDoc(collection(db, 'posts'), {
-      title: title.value,
-      context: context.value
-    })
-    console.log('Document written with ID: ', docRef.id)
-  } catch (e) {
-    console.error(e)
-  }
+  // Add a new document in collection "cities"
+  await setDoc(doc(db, 'posts', title.value), {
+    title: title.value,
+    context: context.value
+  })
+  router.push('/posts')
 }
 const onReset = () => {
   title.value = ''
