@@ -40,9 +40,9 @@
 <script setup lang="ts">
 import { firebaseUser, isSigned } from 'src/composables/useAuth'
 import { ref } from 'vue'
-import { db } from 'boot/firebase'
-import { doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
+import { Post, setPost } from 'src/models/Post'
+
 const router = useRouter()
 const title = ref('')
 const context = ref('')
@@ -50,11 +50,7 @@ const context = ref('')
 const existsRule = (val:string) => (val && val.length > 0) || '내용을 적어주세요'
 
 const onSubmit = async () => {
-  // Add a new document in collection "cities"
-  await setDoc(doc(db, 'posts', title.value), {
-    title: title.value,
-    context: context.value
-  })
+  await setPost(new Post(title.value, context.value))
   router.push('/posts')
 }
 const onReset = () => {
@@ -62,7 +58,3 @@ const onReset = () => {
   context.value = ''
 }
 </script>
-
-<style scoped>
-
-</style>

@@ -10,7 +10,7 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "emul": "firebase emulators:start"
+    "emul": "firebase emulators:start --import=./firebase-data --export-on-exit"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
