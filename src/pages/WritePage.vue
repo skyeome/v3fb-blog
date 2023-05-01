@@ -1,13 +1,11 @@
 <template>
   <q-page padding>
-    <q-card>
-      write
-    </q-card>
+    <PostWrite />
   </q-page>
 </template>
 
 <script setup lang="ts">
-
+import PostWrite from 'src/components/PostWrite.vue'
 </script>
 
 <style scoped>

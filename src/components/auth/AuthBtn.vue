@@ -37,14 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { auth } from '../../boot/firebase'
-import { GoogleAuthProvider, signInWithPopup, onAuthStateChanged, User, signOut } from 'firebase/auth'
+import { auth } from 'boot/firebase'
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
+import { firebaseUser, useAuth } from 'src/composables/useAuth'
 
 const provider = new GoogleAuthProvider()
-
-const firebaseUser = ref<User | null>(null)
-onAuthStateChanged(auth, user => {
-  firebaseUser.value = user
-})
+useAuth()
 </script>
