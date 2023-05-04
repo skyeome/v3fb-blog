@@ -1,14 +1,15 @@
 <template>
   <q-page padding>
-    <PostItem :id="id" />
+    <PostItemUpdate :id="id"/>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import PostItem from 'src/components/PostItem.vue'
+import PostItemUpdate from 'src/components/PostItemUpdate.vue'
 
 const route = useRoute()
-const id = computed(() => route.params.id)
+const id = computed(() => route.params.id as string)
+
 </script>

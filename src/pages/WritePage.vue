@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <PostWrite />
+    <PostWrite id="" title="" content="" />
   </q-page>
 </template>
 

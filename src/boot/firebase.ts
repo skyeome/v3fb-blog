@@ -2,9 +2,10 @@ import { initializeApp } from 'firebase/app'
 import firebaseConfig from '../../firebaseConfig'
 import { getAuth, connectAuthEmulator } from 'firebase/auth'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import { getDatabase, connectDatabaseEmulator } from 'firebase/database'
 
 // Initialize Firebase
-initializeApp(firebaseConfig)
+const app = initializeApp(firebaseConfig)
 const auth = getAuth()
 auth.useDeviceLanguage()
 connectAuthEmulator(auth, 'http://localhost:9099')
@@ -13,4 +14,7 @@ connectAuthEmulator(auth, 'http://localhost:9099')
 const db = getFirestore()
 connectFirestoreEmulator(db, 'localhost', 8081)
 
-export { auth, db }
+const rtdb = getDatabase()
+connectDatabaseEmulator(rtdb, 'localhost', 9000)
+
+export { app, auth, db, rtdb }

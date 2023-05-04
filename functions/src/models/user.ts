@@ -8,18 +8,26 @@ export class User {
     readonly email: string,
     readonly displayName: string,
     readonly photoURL: string,
-    readonly createdAt?: Date | undefined
+    readonly createdAt?: Date | undefined,
+    readonly online?: boolean,
+    readonly visitedAt?: Date | undefined
   ) { }
+
+  toJSON () {
+    return {
+      email: this.email,
+      displayName: this.displayName,
+      photoURL: this.photoURL,
+      createdAt: this.createdAt || FieldValue.serverTimestamp(),
+      online: this.online || true,
+      visitedAt: this.visitedAt || FieldValue.serverTimestamp()
+    }
+  }
 }
 
 const converter: FirestoreDataConverter<User> = {
   toFirestore (user: User): DocumentData {
-    return {
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      createdAt: FieldValue.serverTimestamp()
-    }
+    return user.toJSON()
   },
   fromFirestore (
     snapshot: QueryDocumentSnapshot
@@ -49,4 +57,8 @@ export const createUser = (userRecord:UserRecord) => {
 
 export const deleteUser = (userRecord:UserRecord) => {
   return collection.doc(userRecord.uid).delete()
+}
+
+export const updateState = (uid: string, online: boolean, visitedAt: Date) => {
+  return collection.doc(uid).update({ online, visitedAt })
 }

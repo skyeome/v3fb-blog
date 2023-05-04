@@ -14,7 +14,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/posts',
     component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/PostListPage.vue') }]
+  },
+  {
+    path: '/post/:id',
+    component: () => import('layouts/MainLayout.vue'),
     children: [{ path: '', component: () => import('pages/PostPage.vue') }]
+  },
+  {
+    path: '/post/:id/update',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/UpdatePage.vue') }]
   },
   {
     path: '/users',

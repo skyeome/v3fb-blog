@@ -8,7 +8,7 @@
       <q-card-section>
         <q-input
           filled
-          v-model="title"
+          v-model="postTitle"
           label="제목"
           hint="글의 제목을 정해주세요"
           lazy-rules
@@ -17,7 +17,7 @@
 
         <q-input
           filled
-          v-model="context"
+          v-model="postContent"
           type="textarea"
           label="내용"
           hint="글의 내용을 작성해주세요"
@@ -35,27 +35,25 @@
 </template>
 
 <script setup lang="ts">
-import { firebaseUser } from 'src/composables/useAuth'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { Post, setPost } from 'src/models/Post'
-import { doc } from 'firebase/firestore'
-import { db } from 'src/boot/firebase'
+import { deletePost, setPost } from 'src/models/Post'
+
+const props = defineProps<{id: string, title: string, content: string}>()
 
 const router = useRouter()
-const title = ref('')
-const context = ref('')
+const postTitle = ref(props.title)
+const postContent = ref(props.content)
 
 const existsRule = (val:string) => (val && val.length > 0) || '내용을 적어주세요'
 
 const onSubmit = async () => {
-  if (!firebaseUser.value) throw Error('user not signed')
-  const userRef = doc(db, 'users', firebaseUser.value.uid)
-  await setPost(new Post(title.value, context.value, userRef))
+  if (props.id && props.title !== postTitle.value) await deletePost(props.id)
+  await setPost(postTitle.value, postContent.value)
   router.push('/posts')
 }
 const onReset = () => {
-  title.value = ''
-  context.value = ''
+  postTitle.value = ''
+  postContent.value = ''
 }
 </script>
