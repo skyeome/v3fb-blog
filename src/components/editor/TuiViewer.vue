@@ -3,13 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, withDefaults } from 'vue'
 import Viewer from '@toast-ui/editor/dist/toastui-editor-viewer'
 import '@toast-ui/editor/dist/toastui-editor-viewer.css'
 
 const viewerRef = ref()
 const viewer = ref<Viewer | null>()
-const props = defineProps<{content: string}>()
+const props = withDefaults(defineProps<{content: string}>(), { content: '' })
 
 onMounted(() => {
   console.log(props.content)

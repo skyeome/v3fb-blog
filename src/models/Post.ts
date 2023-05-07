@@ -76,7 +76,18 @@ const titleToId = (text: string) => {
 }
 
 const contentsToChunks = (str: string) => {
-  return str.match(/.{1,1000}/g) || []
+  const chunks = []
+  const temps = []
+  const lines = str.split('\n')
+  for (const line of lines) {
+    temps.push(line)
+    const joinStr = temps.join('\n')
+    if (joinStr.length < 1000) continue
+    chunks.push(joinStr)
+    temps.splice(0, temps.length)
+  }
+  if (temps.length) chunks.push(temps.join('\n'))
+  return chunks
 }
 
 export const setPost = async (title: string, context: string) => {
@@ -87,14 +98,15 @@ export const setPost = async (title: string, context: string) => {
   const batch = writeBatch(db)
   const userRef = doc(db, 'users', firebaseUser.value.uid)
   const id = titleToId(title)
-  const contents = contentsToChunks(context)
-  const post = new Post(title, context, userRef)
+  const chunks = contentsToChunks(context)
+  const summary = context.slice(0, 100)
+  const post = new Post(title, summary, userRef)
   const postRef = doc(db, 'posts', id).withConverter(convertor)
   batch.set(postRef, post)
   const sn = await getContents(id)
   sn.docs.forEach(d => batch.delete(d.ref))
 
-  contents.forEach((c, i) => {
+  chunks.forEach((c, i) => {
     const ref = doc(collection(db, 'posts', id, 'contents')).withConverter(contentsConverter)
     batch.set(ref, new Content(i, c))
   })
@@ -138,7 +150,7 @@ export const getPost = async (id: string) => {
   const contentsSnapshot = await getContents(id)
   const contents = contentsSnapshot.docs.map(d => d.data().content)
 
-  post.content = contents.join('')
+  post.content = contents.join('\n')
 
   return post
 }

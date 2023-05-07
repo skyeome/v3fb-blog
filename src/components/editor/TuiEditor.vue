@@ -10,7 +10,12 @@ import '@toast-ui/editor/dist/toastui-editor.css'
 const editorRef = ref()
 const editor = ref<Editor | null>()
 const props = defineProps<{modelValue: string}>()
-const emits = defineEmits<{(e: 'update:modelValue', value: string):void }>()
+const emits = defineEmits<{(e: 'update:modelValue', value: string):void,
+  (e: 'addImage', file: File, callback: (url: string, text?: string) => void): void}>()
+
+const add = (blob: Blob | File, callback: (url: string, text?: string) => void) => {
+  emits('addImage', blob as File, callback)
+}
 
 onMounted(() => {
   editor.value = new Editor({
@@ -24,6 +29,9 @@ onMounted(() => {
         if (!editor.value) return
         emits('update:modelValue', editor.value?.getMarkdown())
       }
+    },
+    hooks: {
+      addImageBlobHook: add
     }
   })
 })

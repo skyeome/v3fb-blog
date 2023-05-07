@@ -7,7 +7,7 @@
         {{ post.createdAt?.toLocaleDateString() }}
       </q-card-section>
       <q-card-section>
-        {{ post.content }}
+        <tui-viewer :content="post.content" />
       </q-card-section>
     </template>
     <q-card-actions>
@@ -20,6 +20,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getPost, Post } from 'src/models/Post'
+import TuiViewer from './editor/TuiViewer.vue'
 
 const props = defineProps<{id:string | string[]}>()
 const post = ref<Post | null>()
